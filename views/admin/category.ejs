@@ -1,0 +1,21 @@
+<% include public/head %>
+<body id=category>
+<% include public/nav %>
+
+  <a href="/admin/home">返回主页</a>
+  <h1>文章类别管理</h1>
+  <form action="/admin/articles/category/add"  method="post">
+    <input type="text" name="cname" placeholder="'请输入你的分类">
+    <input type="submit" name="button" class="btn btn-info" value="创新新分类">
+  </form>
+  <% if(!categorys.length){ %>
+  <h3>亲～，还没有创建分类哦～</h3>
+  <%  }else{  %>
+  <ul>
+    <%  categorys.forEach(function(category){  %>
+    <li> <a href="/admin/articles/category/<%=category.cname%>"><%= category.cname %></a></li>
+    <% }) %>
+  </ul>
+  <% } %>
+
+  <% include public/foot %>

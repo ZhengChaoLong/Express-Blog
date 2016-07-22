@@ -1,0 +1,27 @@
+<% include public/head %>
+<body>
+<% include public/nav %>
+
+<a href="/admin/home">返回主页</a>
+<h1>文章回收站</h1>
+<a href="/admin/recycle/flush" onclick="confirm('一旦清空就再也无法恢复了，你确定要执行此操作吗？')"><button class='btn btn-danger'>清空回收站</button></a>
+<% if(!articles.length){ %>
+<h3>亲～，你的回收站很干净哦～</h3>
+<%  }else{  %>
+    <table class='table'>
+    <tr>
+        <th>文章标题</th>
+        <th >操作</th>
+    </tr>
+    <%  articles.forEach(function(article){  %>
+      <tr>
+      <td><a href="/list/<%= article.id %>"><%= article.title %></a></td>
+      <td><a href="/admin/recycle/restore/<%= article._id %>"><button type="button" name="delete" class="btn btn-info" >恢复</button></a>
+      <a href="/admin/recycle/delete/<%= article._id %>" onclick="confirm('你确定要删除吗？');"><button type="button" name="delete" class="btn btn-danger" >永久删除</button></a></td>
+      </tr>
+    <% }) %>
+    </table>
+    <% } %>
+    
+  <% include public/foot %>
+

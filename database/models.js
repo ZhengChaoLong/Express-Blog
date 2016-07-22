@@ -1,0 +1,19 @@
+module.exports = { 
+    user:{ 
+        name:{type:String,required:true},
+        password:{type:String,required:true}
+    },
+    article:{
+         title:{type:String,required:true},
+         conten:{type:String,required:true},
+         cname:{type:String,required:true},
+         isdelete:{type:Number,required:true}
+    },
+    admin:{
+        adname:{type:String,required:true},
+        password:{type:String,required:true}
+    },
+    category:{
+        cname:{type:String,required:true}
+    }
+};

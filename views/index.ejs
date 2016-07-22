@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <p><a href="/login">登陆</a> <a href="/register" >注册</a></p>
+
+<h1>文章列表页</h1>
+    <table class='table'>
+    <%  articles.forEach(function(article){  %>
+    	<tr>
+    	<td><a href="/list/<%= article.id %>"><%= article.title %></a></td>
+    	</tr>
+    <% }) %>
+    </table>
+
+  </body>
+</html>

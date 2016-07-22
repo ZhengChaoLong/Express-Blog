@@ -1,0 +1,20 @@
+<% include public/head %>
+<body>
+<% include public/nav %>
+
+  <h1>文章编辑页</h1>
+  <form action="/admin/articles/update/<%=article._id%>" method = 'post'>
+   <label class="form-control" name='title'>标题</label>
+   <input type="text" name="title" value="<%=article.title %>">
+   <label class="form-control" name='conten'>内容</label>
+   <input type="text" name="conten" value="<%=article.conten%>" id="content">
+   
+   <label class="form-control">类别</label>
+   <div class="well">
+    <input type="text" class="span3" id="search" name ='cname' data-provide="typeahead" data-items="4" />
+  </div>
+
+  <input type="submit"  class="btn btn-info"  value="确认修改">
+</form>
+
+ <% include public/foot %>
