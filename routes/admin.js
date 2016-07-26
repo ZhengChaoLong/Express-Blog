@@ -308,6 +308,10 @@ router.get('/articles/delete/:id',function(req,res,next){
      
 });
 
+router.get('/administrator',function (req,res,next) {
+    res.render('admin/administrator');
+})
+
 //后台管理退出
   router.get('/logout',function(req,res){
         req.session.admin = null;

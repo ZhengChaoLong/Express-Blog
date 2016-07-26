@@ -4,7 +4,23 @@
 	margin:0px;
 }
 a{
-	color: black;
+	color: white;
+}
+#addBtn{
+	position: fixed;
+	right: 50px;
+	bottom: 20px;
+	color: white;
+	z-index: 1000;
+	height: 50px;
+	width: 50px;
+	background-color: #2ECC71;
+	border-radius: 50%;
+	text-align: center;
+}
+#addBtn i{
+	font-size: 30px;
+	line-height: 50px;
 }
 body>.container-fluid>.row>div:nth-of-type(1){
 	padding: 0px;

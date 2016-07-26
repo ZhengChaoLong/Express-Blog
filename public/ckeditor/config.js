@@ -7,4 +7,6 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
+    // 取消 “拖拽以改变尺寸”功能 plugins/resize/plugin.js
+    config.resize_enabled = false;
 };
