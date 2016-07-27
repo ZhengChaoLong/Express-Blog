@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>个人中心</title>
+  <link rel='stylesheet' href="dist/css/vendor/bootstrap/css/bootstrap.min.css" />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <style type="text/css">
+    a{margin-left: 20px; text-decoration: none;}
+    a:hover{text-decoration: underline;}
+    .showpic{
+      width: 60px;
+      height: 60px;
+      background: red;
+      border-radius: 60px;
+      text-align: center;
+      line-height: 60px;
+      overflow: hidden;
+    }
+    .fl{
+      float: left;
+    }
+    .changpic{
+      margin-left: 40px;
+      height: 60px;
+      line-height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <h1><%=profic %></h1>
+  <p><a href="/logout">我要注销</a><a href="/changepsw">个人密码修改</a></p>
+  <hr/>
+  <p><label>个人资料修改</label></p>
+  <div class="col-xm-12 col-sm-6">
+    <form action="/profic/update" method="post">
+      <div >
+        <div class="showpic  fl">
+          <img src=""  alt="头像" />
+        </div>
+        <div class="changpic fl">
+         <input type="file" name="file"  value="修改头像">
+       </div>
+     </div>
+     <div class="table-responsive">
+      <table class="table">
+        <tr>
+          <td>个人昵称</td>
+          <td><input type="text" name="name"></td>
+        </tr>
+      </table>
+      <input type="submit" name="submit " class="btn btn-info" value="修改">
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -2,13 +2,13 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel='stylesheet' href="dist/css/vendor/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
     <p><a href="/login">登陆</a> <a href="/register" >注册</a></p>
-
+    <h4><a href="/profic">个人中心</a></h4>
 <h1>文章列表页</h1>
     <table class='table'>
     <%  articles.forEach(function(article){  %>

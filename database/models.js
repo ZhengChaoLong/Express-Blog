@@ -15,5 +15,11 @@ module.exports = {
     },
     category:{
         cname:{type:String,required:true}
+    },
+    comment:{
+        userid:{type:String,required:true},
+        articleid:{type:String,required:true},
+        comtext:{type:String,required:true},
+        comtime:{type:String,required:true}
     }
 };

@@ -1,14 +1,126 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= list.title %></title>
-    <link rel='stylesheet' href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-  </head>
-  <body>
-  
-<h1>文章详情页</h1>
-<h3><%= list.title %></h3>
-<p><%= list.conten %></p>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><%= list.title %></title>
+	<!-- Loading Bootstrap -->
+	<link href="../dist/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Loading Flat UI -->
+	<link href="../dist/css/flat-ui.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/neo.css">
+	<style type="text/css">
+		.comtext{
+			display: block;
+			width: 400px;
+			height: 150px;
+			border:1px solid #ccc;
+			overflow-y: scroll;
+		}
+		.container{
+			width:1000px;
+			margin:10px auto;
+		}
+		.com{
+			margin-top: 10px;
+			width:400px;
+			height: 50px;
+			background: #ccc;
+		}
+		.lf{
+			float: left;
+		}
+		.lr{
+			float: right;
+		}
+		.pic{
+			width: 50px;
+			height: 50px;
+			border-radius: 50px;
+			background: red;
+		}
+		.conten{
+			width: 320px;
+			height: 50px;	
+		}
+	</style>
+</head>
+<body>
+	<div  class="container">
+		<h1>文章详情页</h1>
+		<div  class="form-group">
+			<label >文章标题</label>
+			<p><%= list.title %></p>
+		</div>
+		<div  class="form-group">
+			<label >文章内容</label>
+			<p><%= list.conten %></p>
+		</div>
 
-  </body>
+
+		<div >
+
+			<label>评论</label>
+			<p>登录后你可以发表评论，请先登录。<a href="/login">登录>>></a></p>
+			<textarea class="comtext" 	  id='ctext'></textarea>
+			<input type="submit"  class="btn btn-info" value="评论" id="comment">
+			<%  comments.forEach( function( comment ) {  %>
+			<div class="com">
+				<div  class="lf   pic"></div>
+				<div class="lr  conten">内容：<%= comment.comtext %>  时间<%=comment.comtime %></div>
+			</div>
+			<% } ) %>
+		</div>
+
+		<script src="../dist/js/vendor/jquery.min.js"></script>
+		<script src="../dist/js/flat-ui.min.js"></script>
+		<script type="text/javascript">
+			$(function(){ 
+        // $("#register0").click(function(){ 
+        //     location.href = 'register';
+        // });
+        function getNowFormatDate() {
+        	var date = new Date();
+        	var seperator1 = "-";
+        	var seperator2 = ":";
+        	var month = date.getMonth() + 1;
+        	var strDate = date.getDate();
+        	if (month >= 1 && month <= 9) {
+        		month = "0" + month;
+        	}
+        	if (strDate >= 0 && strDate <= 9) {
+        		strDate = "0" + strDate;
+        	}
+        	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+        	+ " " + date.getHours() + seperator2 + date.getMinutes()
+        	+ seperator2 + date.getSeconds();
+        	return currentdate;
+        }
+        $("#comment").click(function(){ 
+        	var comtext = $("#ctext").val();
+        	var articleid =  '<%= list.id %>';
+        	var comtime = getNowFormatDate();
+        	var userid =  '1';
+        	var data = {"comtext":comtext,'articleid':articleid,'comtime':comtime,'userid':userid};
+        	console.log(data);
+        	$.ajax({ 
+        		url:'/sendcomment',
+        		type:'post',
+        		data: data,
+        		success: function(data,status){ 
+        			if(status == 'success'){ 
+        				location.href = '/list/<%= list.id %> ';
+        			}
+        		},
+        		error: function(data,status){ 
+        			if(status == 'error'){ 
+        				location.href = '/login';
+        			}
+        		}
+        	});
+        });
+    });
+</script>
+
+</body>
 </html>

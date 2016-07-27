@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>个人中心</title>
+    <link rel='stylesheet' href="dist/css/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style type="text/css">
+    a{margin-left: 20px; text-decoration: none;}
+    a:hover{text-decoration: underline;}
+    </style>
+  </head>
+  <body>
+  <h1><%=profic %></h1>
+  <p><a href="/profic">返回个人中心</a> <a href="/">返回首页</a><a href="/logout">我要注销</a></p>
+<hr/>
+<p><label>个人密码修改</label></p>
+    <div class="col-xm-12 col-sm-6">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                  <td>原来的密码</td>
+                  <td><input type="text" name="name"></td>
+                </tr>
+                <tr>
+                  <td>新的密码</td>
+                  <td><input type="email" name="email"></td>
+                </tr>
+                <tr>
+                  <td>确认新的密码</td>
+                  <td><input type="email" name="email"></td>
+                </tr>
+            </table>
+            <input type="submit" name="submit " class="btn btn-info" value="修改">
+        </div>
+    </div>
+    </p>
+  </body>
+</html>

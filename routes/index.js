@@ -1,6 +1,44 @@
 var express = require('express');
 var router = express.Router();
 
+//个人资料修改
+router.post('/profic/update',function(req,res,next){
+
+});
+//显示个人资料页面
+router.get('/profic',function(req,res){
+    var welcome = 'welcome to  profile';
+    res.render('profic' , {profic:welcome} );
+});
+//显示个人密码修改页面
+router.get('/changepsw',function(req,res){
+    var welcome = 'welcome to here to change your password';
+    res.render('changepsw' , {profic:welcome} );
+});
+
+//异步处理评论
+router.post('/sendcomment',function(req,res,next){
+    // if(!req.session.user){                     //到达/home路径首先判断是否已经登录
+    //     req.session.error = "请先登录"
+    //     res.redirect("/login");                //未登录则重定向到 /login 路径
+    // }
+    var  userid = req.body.userid;
+    var articleid = req.body.articleid;
+    var comtext = req.body.comtext;
+    var comtime = req.body.comtime;
+    var doc = {userid:userid,articleid:articleid,comtext:comtext,comtime:comtime};
+    console.log(doc);
+    var Comment  = global.dbHandel.getModel('comment');
+    Comment.create(doc,function(err){
+        if(err){
+             res.send(500);
+            console.log(err);
+        }else{
+            console.log('comment success');
+            res.send(200);
+        }
+    });
+});
 
 //前台首页，登陆注册，文章列表页
     router.get('/', function(req, res, next) {
@@ -19,16 +57,29 @@ var router = express.Router();
 //显示文章详情信息
      router.get('/list/:id', function(req, res, next) {
         var Article = global.dbHandel.getModel('article');
+        var Comment = global.dbHandel.getModel('comment');
         id = req.params.id;
-        Article.findOne({_id:id},function(err,doc){
-                  if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
-                        res.send(500);
-                        console.log(err);
-                    }else{
-                        //console.log(doc);
-                        res.render('list',{list:doc});
-                    }
-        });
+        var data = [];
+        // var a = () => {
+        //     return "asdadad";
+        // }
+        /***
+        ***/
+        //promise 执行多个条件语句
+        var get_article = ()=>{
+            return Article.findOne({_id:id}).exec();
+        }
+        var get_comment=()=>{
+            return Comment.find({}).sort({'comtime':-1}).exec();
+        }
+        Promise.all([get_article(), get_comment()])
+            .then( (data) => {
+                res.render('list',{list: data[0],comments:data[1]});
+            })
+            .catch( (e) => {
+                console.log(e);
+                res.send({err:e});
+            })
     });
 
 //前台用户退出
@@ -40,7 +91,7 @@ var router = express.Router();
 
 //前台用户登陆
     router.get('/login',function(req,res){
-        res.render("user/login",{title:'User Login'});
+        res.render("login",{title:'User Login'});
     });
 
 //前台用户登陆处理，验证
@@ -73,7 +124,7 @@ var router = express.Router();
 
 //前台用户注册页面
     router.get('/register',function(req,res){    // 到达此路径则渲染register文件，并传出title值供 register.html使用
-        res.render("user/register",{title:'User register'});
+        res.render("register",{title:'User register'});
     });
 
 //前台用户注册处理程序
@@ -108,13 +159,13 @@ var router = express.Router();
 });
 
 //前台登陆后的主页面
-    router.get("/home",function(req,res){ 
+router.get("/home",function(req,res){ 
     if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
         res.redirect("/login");                //未登录则重定向到 /login 路径
     }
     var name = req.session.user['name'];
-    res.render("user/home",{title:'Home' , name: name});         //已登录则渲染home页面
+    res.render("home",{title:'Home' , name: name});         //已登录则渲染home页面
 });
 
 module.exports = router;
