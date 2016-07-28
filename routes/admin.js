@@ -3,31 +3,29 @@ var router = express.Router();
 //url 访问时为admin 加上以下的路由才能访问
 /* GET admin listing. */
 
-
-
 //后台登陆处理程序
 router.post('/', function(req, res, next) {
     if(req.session.admin) next();
     var Admin = global.dbHandel.getModel('admin');
     var adname = req.body.adname;                //获取post上来的 data数据中 uname的值
-    Admin.findOne({adname:adname},function(err,doc){   //通过此model以用户名的条件 查询数据库中的匹配信息
-        if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
+    Admin.findOne({adname:adname},function(err,doc) {   //通过此model以用户名的条件 查询数据库中的匹配信息
+        if (err) {                                         //错误就返回给原post处（login.html) 状态码为500的错误
             res.send(500);
             console.log(err);
-        }else if(!doc){                                 //查询不到用户名匹配信息，则用户名不存在
+        } else if (!doc) {                                 //查询不到用户名匹配信息，则用户名不存在
             req.session.error = '用户名不存在';
-            res.render('admin/login',{title:"后台登录页"});
-        }else{
-            if(req.body.apwd != doc.password){     //查询到匹配用户名的信息，但相应的password属性不匹配
+            res.render('admin/login', {title: "后台登录页"});
+        } else {
+            if (req.body.apwd != doc.password) {     //查询到匹配用户名的信息，但相应的password属性不匹配
                 req.session.error = "密码错误";
-                res.render('admin/login',{title:"后台登录页"});
-            }else{                                     //信息匹配成功，则将此对象（匹配到的user) 赋给session.user  并返回成功
+                res.render('admin/login', {title: "后台登录页"});
+            } else {                                     //信息匹配成功，则将此对象（匹配到的user) 赋给session.user  并返回成功
                 req.session.admin = doc;
                 res.redirect("/home");
             }
         }
-    });
-});
+    })
+})
 
 //显示后台登陆页面
 router.get('/', function(req, res, next) {
@@ -44,6 +42,36 @@ router.all('/:id',function (req,res,next) {
     }
 })
 
+
+//显示所有的留言
+router.get('/comment',function(req,res,next){
+    var Comment = global.dbHandel.getModel('comment');
+    Comment.find({},function(err,doc){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            console.log('show comment');
+            return res.render('admin/comment',{comments:doc});
+        }
+    });
+});
+
+
+
+//删除留言
+router.get('/comment/delete/:id',function(req,res,next){
+    var id = req.params.id;
+    var Comment  = global.dbHandel.getModel('comment');
+    Comment.remove({_id:id},function(err){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            res.redirect('/admin/comment');
+        }
+    });
+});
 
 
 //文章分类接口
@@ -120,9 +148,55 @@ router.post('/category/add',function(req,res,next){
 
 });
 
+//后台管理员列表页
+router.get('/administrator',function(req,res,next){
+             //res.locals.success = req.session? req.session.success:null;
+    var Admin = global.dbHandel.getModel('admin');
+    Admin.find({},function(err,doc){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            res.render('admin/administrator', { admins:doc,success: req.flash('success')});
+        }
+    });
+});
+
+//管理员删除
+router.get('/administrator/delete/:id',function(req,res,next){
+    var id = req.params.id;
+    var Admin  = global.dbHandel.getModel('admin');
+    Admin.remove({_id:id},function(err){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            res.redirect('/admin/administrator');
+        }
+    });
+});
+
+//创建一个管理员
+router.post('/administrator/add',function(req,res,next){
+    adname = req.body.adname;
+    password = req.body.password;
+    var Admin  = global.dbHandel.getModel('admin');
+    var doc = {adname:adname,password:password};
+    Admin.create(doc,function(err){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            console.log('create user ok');
+            req.flash('success','create admin ok');
+            res.redirect('/admin/administrator');
+        }
+    });
+});
+
+
 //后台用户列表页
 router.get('/users',function(req,res,next){
-             //res.locals.success = req.session? req.session.success:null;
   	var User = global.dbHandel.getModel('user');
   	User.find({},function(err,doc){
   		if(err){
@@ -165,10 +239,6 @@ router.post('/users/add',function(req,res,next){
         }
     });
 });
-
-
-
-
 
 
 //显示后台主页

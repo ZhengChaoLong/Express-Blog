@@ -6,10 +6,7 @@ var fs = require('fs');
 router.post('/profic/update',function(req,res,next){
      //生成multiparty对象，并配置上传目标路径
     
- // var path = '/upload/';
- // console.log(req.files.file.path);
- // fs.
- // res.send({a:"asdasd"});
+
 });
 
 router.post('/changepsw',function(req,res,next){
@@ -102,6 +99,11 @@ router.get('/', function(req, res, next) {
 
 //显示文章详情信息显示具体文章内容和留言信息。
 router.get('/list/:id/:page?', function(req, res, next) {
+    if(!req.session.user){                 
+        var user = null;
+    }else{
+        var user = req.session.user;
+    }
     var Article = global.dbHandel.getModel('article');
     var Comment = global.dbHandel.getModel('comment');
     id = req.params.id;
@@ -125,7 +127,7 @@ router.get('/list/:id/:page?', function(req, res, next) {
         }
         Promise.all([get_article(), get_comment()])
         .then( (data) => {
-            res.render('list',{list: data[0],comments:data[1],page:page,isFirstPage:page-1==0,isLastPage: (page-1)*2==data[1].length  });
+            res.render('list',{list: data[0],comments:data[1],user:user,page:page,isFirstPage:page-1==0,isLastPage: (page-1)*2==data[1].length  });
         })
         .catch( (e) => {
             console.log(e);
