@@ -6,6 +6,9 @@
 a{
 	color: white;
 }
+label{
+	margin: 0px;
+}
 #addBtn{
 	color: white;
 	z-index: 1000;
@@ -116,6 +119,10 @@ table tr .btn:nth-of-type(2){
 .list .edit{
 	margin-right: 15px;
 }
-input[type=text]{
+#category input[type=text]{
 	width: 200px;
+}
+#add form{
+	padding-left: 10px;
+	padding-top: 10px;
 }

@@ -6,9 +6,11 @@ module.exports = {
     },
     article:{
          title:{type:String,required:true},
-         conten:{type:String,required:true},
-         cname:{type:String,required:true},
-         isdelete:{type:Number,required:true}
+         _authorid:{type:String,required:true},
+         content:{type:String,required:true},
+         data:{type:Date,default: Date.now},
+         _categoryid:[String],
+         isdelete:{type:Number,default:0}
     },
     admin:{
         adname:{type:String,required:true},
@@ -16,7 +18,7 @@ module.exports = {
     },
     category:{
         cname:{type:String,required:true},
-        isdelete:{type:Number}
+        isdelete:{type:Number,default:0}
     },
     comment:{
         userid:{type:String,required:true},

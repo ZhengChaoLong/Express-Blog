@@ -3,19 +3,57 @@ var router = express.Router();
 //url 访问时为admin 加上以下的路由才能访问
 /* GET admin listing. */
 
+
+
+//后台登陆处理程序
+router.post('/', function(req, res, next) {
+    if(req.session.admin) next();
+    var Admin = global.dbHandel.getModel('admin');
+    var adname = req.body.adname;                //获取post上来的 data数据中 uname的值
+    Admin.findOne({adname:adname},function(err,doc){   //通过此model以用户名的条件 查询数据库中的匹配信息
+        if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
+            res.send(500);
+            console.log(err);
+        }else if(!doc){                                 //查询不到用户名匹配信息，则用户名不存在
+            req.session.error = '用户名不存在';
+            res.render('admin/login',{title:"后台登录页"});
+        }else{
+            if(req.body.apwd != doc.password){     //查询到匹配用户名的信息，但相应的password属性不匹配
+                req.session.error = "密码错误";
+                res.render('admin/login',{title:"后台登录页"});
+            }else{                                     //信息匹配成功，则将此对象（匹配到的user) 赋给session.user  并返回成功
+                req.session.admin = doc;
+                res.redirect("/home");
+            }
+        }
+    });
+});
+
+//显示后台登陆页面
+router.get('/', function(req, res, next) {
+    res.render('admin/login',{title:'Admin'});
+});
+
+//过滤url
+router.all('/:id',function (req,res,next) {
+    if(!req.session.admin){
+        res.redirect('/admin/');
+    }
+    else{
+        next();
+    }
+})
+
+
+
 //文章分类接口
 router.get('/category',function(req,res,next){
     var Category = global.dbHandel.getModel('category');
-    Category.find({isdelete:{$exists:false}}).sort({'_id':-1}).exec(function(err,doc){
+    Category.find({isdelete:0}).sort({'_id':-1}).exec(function(err,doc){
         if(err){
             res.send(500);
             console.log(err);
         }else{
-            var arr = [];
-           for(var i=0;i<doc.length;i++){
-                arr[i]=doc[i].cname;
-           }
-           //console.log(arr);
             console.log(doc)
            res.render('admin/category',{ categorys : doc })
         }
@@ -40,9 +78,8 @@ router.get('/articles/category/:cname',function(req,res,next){
 router.get('/category/delete/:id',function(req,res,next){
      var Category = global.dbHandel.getModel('category');
      var id = req.params.id;
-    Category.update({_id:id},{$set:{isdelete : 1}},function(err){
+    Category.update({_id:id},{isdelete : 1},{overwrite:true},function(err){
                   if(err){
-                      //错误就返回给原post处（login.html) 状态码为500的错误
                         res.send(500);
                     }else{
                         res.redirect('/admin/category');
@@ -56,9 +93,7 @@ router.post('/category/edit/',function(req,res,next){
     var Category = global.dbHandel.getModel('category');
     var cname = req.body.cname;
     var id = req.body.id;
-    console.log(cname)
-    console.log(id)
-    Category.update({_id:id},{$set:{cname:cname}},function (err) {
+    Category.update({_id:id},{cname:cname},{overwrite:true},function (err) {
         if(err){
             res.send(500);
         }else{
@@ -72,6 +107,7 @@ router.post('/category/edit/',function(req,res,next){
 router.post('/category/add',function(req,res,next){
         var Category = global.dbHandel.getModel('category');
         var cname = req.body.cname;
+    console.log(cname)
         var doc = {cname:cname};
         Category.create(doc,function(err){
             if(err){
@@ -131,36 +167,8 @@ router.post('/users/add',function(req,res,next){
 });
 
 
-//显示后台登陆页面
-router.get('/', function(req, res, next) {    
-                res.render('admin/login',{title:'Admin'});
-    });
 
-//后台登陆处理程序
-router.post('/', function(req, res, next) {    
-               var Admin = global.dbHandel.getModel('admin');  
-               var adname = req.body.adname;                //获取post上来的 data数据中 uname的值
-                Admin.findOne({adname:adname},function(err,doc){   //通过此model以用户名的条件 查询数据库中的匹配信息
-                    if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
-                        res.send(500);
-                        console.log(err);
-                    }else if(!doc){                                 //查询不到用户名匹配信息，则用户名不存在
-                        req.session.error = '用户名不存在';
-                        res.send(404);                            //    状态码返回404
-                       res.redirect("/login");
-                    }else{ 
-                        if(req.body.apwd != doc.password){     //查询到匹配用户名的信息，但相应的password属性不匹配
-                            req.session.error = "密码错误";
-                            res.send(404);
-                            res.redirect("/login");
-                        }else{                                     //信息匹配成功，则将此对象（匹配到的user) 赋给session.user  并返回成功
-                            req.session.admin = doc;
-                            res.send(200);
-                            res.redirect("/home");
-                        }
-                    }
-                });
-    });
+
 
 
 //显示后台主页
@@ -169,14 +177,14 @@ router.get('/home', function(req, res, next) {
                     req.session.error = "请先登录"
                     res.redirect("/admin");                //未登录则重定向到 /login 路径
                 }
-                var adname =req.session.admin['adname'];
+                var adname =req.session.admin.adname;
                 var Article = global.dbHandel.getModel('article');
                 Article.find({isdelete:0},function(err,doc){
                   if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
                         res.send(500);
                         console.log(err);
                     }else{
-                        res.render('admin/home', { title: 'Admin',adname:"adname",articles:doc});
+                        res.render('admin/home', { title: 'Admin',adname:adname,articles:doc});
                     }
         });
                 //res.render('admin/home', { title: 'Admin',adname:adname,articles:articles});
@@ -235,31 +243,31 @@ router.get('/recycle/flush',function(req,res,next){
         }
     });
 });
-//文章修改页面已经文章发布页面
-router.get('/articles/:id?',function(req,res,next){
-            if(req.params.id!=null){ //文章修改页面
-                    var Article = global.dbHandel.getModel('article');
-                    id = req.params.id;
-                    Article.findOne({_id:id},function(err,doc){
-                            if(err){
-                                res.send(500);
-                                console.log(err);
-                            }else{
-                                res.render('admin/update',{title:'文章修改',article:doc});
-                            }
-                    });
-            }else{  //文章添加页面
-                // var Category = global.dbHandel.getModel('category');
-                // Category.find({},function(err,doc){
-                //         if(err){
-                //             res.send(500);  
-                //             console.log(err);
-                //         }else{
-                //             res.render('admin/add',{title:'文章发布',categorys:doc});
-                //         }
-                // })
-                res.render('admin/add',{title:'文章发布'});
-            }
+
+//文章列表页
+router.get('/articles',function(req,res,next){
+    var Article = global.dbHandel.getModel('article');
+    Article.find({isdelete:0},function(err,doc){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            res.render('admin/articleslist',{title:'文章发布',articles:doc});
+        }
+    })
+});
+
+//添加文章页面
+router.get('/add',function(req,res,next){
+    var Category = global.dbHandel.getModel('category');
+    Category.find({isdelete:0},function(err,doc){
+        if(err){
+            res.send(500);
+            console.log(err);
+        }else{
+            res.render('admin/add',{title:'文章发布',categorys:doc});
+        }
+    })
 });
 
 //文章修改处理
@@ -280,19 +288,24 @@ router.post('/articles/update/:id',function(req,res,next){
 
 });
 
-//文章发布，添加  ---处理
+//处理文章发布
 router.post('/articles/add',function(req,res,next){
-    title = req.body.title;
-    conten = req.body.conten;
-    cname = req.body.cname;
-    doc = { title :  title , conten: conten ,cname:cname, isdelete : 0 };
+
+    console.log(req.body)
+
+    var title = req.body.title;
+    var content = req.body.content;
+    var cids = req.body.cids;
+    console.log(req.session.admin)
+    var aid = req.session.admin._id;
+    var doc = { title :  title , content: content ,_categoryid:cids,_authorid:aid};
     var Article = global.dbHandel.getModel('article');
         Article.create(doc, function(error){
         if(error) {
             console.log(error);
         } else {
             console.log('save ok');
-            res.redirect('/admin/home');
+            res.redirect('/admin/add');
         }
     });
 });
@@ -323,5 +336,7 @@ router.get('/administrator',function (req,res,next) {
         req.session.error = null;
         res.redirect('/admin');
     });
+
+
 
 module.exports = router;
