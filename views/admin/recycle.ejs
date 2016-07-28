@@ -1,7 +1,7 @@
-<% include public/head %>
-<body>
-<% include public/nav %>
 
+<% include public/head %>
+<body id=comment>
+<% include public/nav %>
 <a href="/admin/home">返回主页</a>
 <h1>文章回收站</h1>
 <a href="/admin/recycle/flush" onclick="confirm('一旦清空就再也无法恢复了，你确定要执行此操作吗？')"><button class='btn btn-danger'>清空回收站</button></a>
@@ -22,6 +22,5 @@
     <% }) %>
     </table>
     <% } %>
-    
   <% include public/foot %>
 

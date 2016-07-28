@@ -40,14 +40,6 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/admin',admin);
 
-//multer 实现图片上传功能
-// app.use(multer({
-//   dest: './public/images',
-//   rename: function (fieldname, filename) {
-//     return filename;
-//   }
-// }));
-
 app.use(function(req,res,next){ 
     res.locals.user = req.session.user;   // 从session 获取 user对象
     var err = req.session.error;   //获取错误信息

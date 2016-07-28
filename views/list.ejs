@@ -65,9 +65,16 @@
 		<div >
 
 			<label>评论</label>
-			<p>登录后你可以发表评论，请先登录。<a href="/login">登录>>></a></p>
-			<textarea class="comtext" 	  id='ctext'></textarea>
-			<input type="submit"  class="btn btn-info" value="评论" id="comment">
+			<p>登录后你可以发表评论，请先登录。<a href="/login"><span>登录>>></span></a></p>
+
+			<% if(user){ %>
+				<textarea class="comtext" id='ctext' ></textarea>
+				<input type="submit"  class="btn btn-info" value="评论" id="comment">
+			<% }else{ %>
+				<textarea class="comtext"  id='ctext'  disabled="disabled"></textarea>
+				<input type="submit"  class="btn btn-info" value="评论" id="comment" disabled="disabled">
+			<% } %>
+			
 			<%  comments.forEach( function( comment ) {  %>
 			<div class="com">
 				<div  class="lf   pic"></div>
@@ -80,7 +87,7 @@
 		<script src="../dist/js/vendor/jquery.min.js"></script>
 		<script src="../dist/js/flat-ui.min.js"></script>
 		<script type="text/javascript">
-			$(function(){ 
+$(function(){ 
         // $("#register0").click(function(){ 
         //     location.href = 'register';
         // });
@@ -101,11 +108,12 @@
         	+ seperator2 + date.getSeconds();
         	return currentdate;
         }
+ <% if(user){ %>
         $("#comment").click(function(){ 
         	var comtext = $("#ctext").val();
-        	var articleid =  '<%= list.id %>';
+        	var articleid =  '<%= list.title %>';
         	var comtime = getNowFormatDate();
-        	var userid =  '1';
+        	var username = '<%=user.name %>';
         	var data = {"comtext":comtext,'articleid':articleid,'comtime':comtime,'userid':userid};
         	console.log(data);
         	$.ajax({ 
@@ -124,7 +132,9 @@
         		}
         	});
         });
+        <% } %>
     });
+
 </script>
 
 </body>
