@@ -1,6 +1,7 @@
 module.exports = { 
     user:{ 
         name:{type:String,required:true},
+        picurl:{type:String},
         password:{type:String,required:true}
     },
     article:{

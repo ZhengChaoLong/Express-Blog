@@ -32,23 +32,23 @@
   <hr/>
   <p><label>个人资料修改</label></p>
   <div class="col-xm-12 col-sm-6">
-    <form action="/profic/update" method="post">
+    <form action="/profic/update" method="post"  enctype='multipart/form-data' >
       <div >
         <div class="showpic  fl">
           <img src=""  alt="头像" />
         </div>
         <div class="changpic fl">
-         <input type="file" name="file"  value="修改头像">
+         <input type="file" name="inputFIle" multiple="multiple">
        </div>
      </div>
-     <div class="table-responsive">
+     <!-- <div class="table-responsive">
       <table class="table">
         <tr>
           <td>个人昵称</td>
           <td><input type="text" name="name"></td>
         </tr>
-      </table>
-      <input type="submit" name="submit " class="btn btn-info" value="修改">
+      </table> -->
+      <input type="submit" name="btnUp " class="btn btn-info" value="修改">
     </div>
   </form>
 </div>

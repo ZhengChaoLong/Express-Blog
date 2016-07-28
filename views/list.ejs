@@ -43,11 +43,15 @@
 			width: 320px;
 			height: 50px;	
 		}
+		.prepage a{float:left;text-decoration:none;padding:.5em 1em;color:#47D8FF;font-weight:bold;}
+		.nextpage a{float:left;text-decoration:none;padding:.5em 1em;color:#47D8FF;font-weight:bold;}
+		.prepage a:hover,.nextpage a:hover{text-decoration:none;background-color:#ff0000;color:#f9f9f9;-webkit-transition:color .2s linear;}
 	</style>
 </head>
 <body>
 	<div  class="container">
 		<h1>文章详情页</h1>
+		<a href="/">返回首页</a>
 		<div  class="form-group">
 			<label >文章标题</label>
 			<p><%= list.title %></p>
@@ -70,8 +74,9 @@
 				<div class="lr  conten">内容：<%= comment.comtext %>  时间<%=comment.comtime %></div>
 			</div>
 			<% } ) %>
+			<%- include paging %>
 		</div>
-
+		<hr/><br><br>
 		<script src="../dist/js/vendor/jquery.min.js"></script>
 		<script src="../dist/js/flat-ui.min.js"></script>
 		<script type="text/javascript">

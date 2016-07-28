@@ -16,23 +16,24 @@
 <p><label>个人密码修改</label></p>
     <div class="col-xm-12 col-sm-6">
         <div class="table-responsive">
-            <table class="table">
+        <form method="post" action="/changepsw">
+                <table class="table">
                 <tr>
                   <td>原来的密码</td>
-                  <td><input type="text" name="name"></td>
+                  <td><input type="password" name="oldpsw"></td>
                 </tr>
                 <tr>
                   <td>新的密码</td>
-                  <td><input type="email" name="email"></td>
+                  <td><input type="password" name="newpsw"></td>
                 </tr>
                 <tr>
                   <td>确认新的密码</td>
-                  <td><input type="email" name="email"></td>
+                  <td><input type="password" name="renewpsw"></td>
                 </tr>
             </table>
             <input type="submit" name="submit " class="btn btn-info" value="修改">
+            </form>
         </div>
     </div>
-    </p>
   </body>
 </html>
