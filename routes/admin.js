@@ -106,7 +106,7 @@ router.get('/articles/category/:cname',function(req,res,next){
 router.get('/category/delete/:id',function(req,res,next){
      var Category = global.dbHandel.getModel('category');
      var id = req.params.id;
-    Category.update({_id:id},{isdelete : 1},{overwrite:true},function(err){
+    Category.update({_id:id},{isdelete : 1},{overwrite:false},function(err){
                   if(err){
                         res.send(500);
                     }else{
@@ -116,12 +116,12 @@ router.get('/category/delete/:id',function(req,res,next){
      
 });
 
-//编辑分类s
+//编辑分类
 router.post('/category/edit/',function(req,res,next){
     var Category = global.dbHandel.getModel('category');
     var cname = req.body.cname;
     var id = req.body.id;
-    Category.update({_id:id},{cname:cname},{overwrite:true},function (err) {
+    Category.update({_id:id},{cname:cname},{overwrite:false},function (err) {
         if(err){
             res.send(500);
         }else{
