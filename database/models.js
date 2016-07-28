@@ -15,7 +15,8 @@ module.exports = {
         password:{type:String,required:true}
     },
     category:{
-        cname:{type:String,required:true}
+        cname:{type:String,required:true},
+        isdelete:{type:Number}
     },
     comment:{
         userid:{type:String,required:true},

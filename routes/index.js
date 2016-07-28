@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-// var multiparty = require('multiparty');
 var util = require('util');
 var fs = require('fs');
 //个人资料修改

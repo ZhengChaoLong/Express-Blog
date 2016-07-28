@@ -2,20 +2,37 @@
 <body id=category>
 <% include public/nav %>
 
-  <a href="/admin/home">返回主页</a>
-  <h1>文章类别管理</h1>
-  <form action="/admin/articles/category/add"  method="post">
-    <input type="text" name="cname" placeholder="'请输入你的分类">
-    <input type="submit" name="button" class="btn btn-info" value="创新新分类">
+  <form action="/admin/category/add"  method="post" class="clearfix">
+    <input type="text" class="form-control" name="cname" style="float: left" />
+    <a id="addBtn" class="subm" href="#" style="float: left;">
+      <i class="fui-plus"></i>
+    </a>
   </form>
+
+<ul class="list-group list">
   <% if(!categorys.length){ %>
-  <h3>亲～，还没有创建分类哦～</h3>
+    <h3>亲～，还没有创建分类哦～</h3>
   <%  }else{  %>
-  <ul>
-    <%  categorys.forEach(function(category){  %>
-    <li> <a href="/admin/articles/category/<%=category.cname%>"><%= category.cname %></a></li>
-    <% }) %>
-  </ul>
+
+  <%  categorys.forEach(function(category){  %>
+    <li href=# class="list-group-item clearfix">
+
+      <form method="post" action="/admin/category/edit">
+        <span><%= category.cname %></span>
+      <div class="form-group has-success" style="display: none"><input name="cname" class="form-control" type="text" /></div>
+      <a class="btn btn-warning" role="button" href="/admin/category/delete/<%= category._id %>">删除</a>
+        <input type="hidden" value="<%= category._id %>" name="id">
+      <input class="btn btn-primary edit" type="submit" role="button" data-id="<%= category._id %>" data-edit="false" value="编辑">
+        </form>
+    </li>
+  <% }) %>
   <% } %>
 
+
+</ul>
   <% include public/foot %>
+<script>
+  $('.subm').click(function () {
+    $(this).parents('form').submit();
+  })
+</script>
