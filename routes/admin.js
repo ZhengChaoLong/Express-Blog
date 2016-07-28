@@ -6,7 +6,7 @@ var router = express.Router();
 //文章分类接口
 router.get('/category',function(req,res,next){
     var Category = global.dbHandel.getModel('category');
-    Category.find({},{cname:1},function(err,doc){
+    Category.find({isdelete:{$exists:false}}).sort({'_id':-1}).exec(function(err,doc){
         if(err){
             res.send(500);
             console.log(err);
@@ -16,24 +16,12 @@ router.get('/category',function(req,res,next){
                 arr[i]=doc[i].cname;
            }
            //console.log(arr);
-            return res.send(arr);
+            console.log(doc)
+           res.render('admin/category',{ categorys : doc })
         }
     });
 });
 
-//文章分类管理
-router.get('/articles/category',function(req,res,next){
-	var Category = global.dbHandel.getModel('category');
-	Category.find({},function(err,doc){
-		if(err){
-			res.send(500);
-			console.log(err);
-
-		}else{
-			res.render('admin/category',{ categorys : doc });
-		}
-	});
-});
 //该类别的文章列表
 router.get('/articles/category/:cname',function(req,res,next){
             var cname = req.params.cname;
@@ -48,23 +36,40 @@ router.get('/articles/category/:cname',function(req,res,next){
             });
 });
 
-//后台分类列表下admin/articles/category下的文章删除处理--------软删除
-router.get('/articles/category/delete/:cname/:id',function(req,res,next){
-     var Article = global.dbHandel.getModel('article');
-     var cname = req.params.cname;
+//删除分类
+router.get('/category/delete/:id',function(req,res,next){
+     var Category = global.dbHandel.getModel('category');
      var id = req.params.id;
-     Article.update({_id:id},{  $set : { isdelete : 1 }}, { upsert : true },function(err){
-                  if(err){                                         //错误就返回给原post处（login.html) 状态码为500的错误
+    Category.update({_id:id},{$set:{isdelete : 1}},function(err){
+                  if(err){
+                      //错误就返回给原post处（login.html) 状态码为500的错误
                         res.send(500);
-                        console.log(err);
                     }else{
-                        res.redirect('/admin/articles/category/'+cname);
+                        res.redirect('/admin/category');
                     }
         });
      
 });
 
-router.post('/articles/category/add',function(req,res,next){    
+//编辑分类s
+router.post('/category/edit/',function(req,res,next){
+    var Category = global.dbHandel.getModel('category');
+    var cname = req.body.cname;
+    var id = req.body.id;
+    console.log(cname)
+    console.log(id)
+    Category.update({_id:id},{$set:{cname:cname}},function (err) {
+        if(err){
+            res.send(500);
+        }else{
+            res.redirect('/admin/category');
+        }
+    })
+
+});
+
+//添加分类
+router.post('/category/add',function(req,res,next){
         var Category = global.dbHandel.getModel('category');
         var cname = req.body.cname;
         var doc = {cname:cname};
@@ -73,7 +78,7 @@ router.post('/articles/category/add',function(req,res,next){
                     res.send(500);
                     console.log(err);
             }else{
-                    res.redirect('/admin/articles/category');
+                    res.redirect('/admin/category');
             }
         });
 

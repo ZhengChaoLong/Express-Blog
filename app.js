@@ -12,8 +12,10 @@ var users = require('./routes/users');
 var admin = require('./routes/admin');
 var flash = require('connect-flash');  
 
+
+global.db = mongoose.connect("mongodb://127.0.0.1/nodedb");
+console.log('connect')
 global.dbHandel = require('./database/dbHandel');
-global.db = mongoose.connect("mongodb://localhost:27017/nodedb");
 
 var app = express();
 app.use(session({ 
@@ -47,6 +49,7 @@ app.use('/admin',admin);
 //     return filename;
 //   }
 // }));
+
 
 app.use(function(req,res,next){ 
     res.locals.user = req.session.user;   // 从session 获取 user对象

@@ -1,21 +1,21 @@
 $(function($){
-	$('#category .list-group-item').dblclick(function(e){
-		if(!$(this).attr('edit')){
-			var text = $(this).find('span').text();
-			var $node= $(this).find('.form-group');
+	$('#category .list-group-item .edit').click(function(e){
+		if(!$(this).data('edit')){
+			e.preventDefault();
+			var text = $(this).siblings('span').text();
+			var $node= $(this).siblings('.form-group');
 			$node.find('input').val(text);
-			$(this).find('span').hide();
+			$(this).siblings('span').hide();
 			$node.show();
 			$node.find('input').focus();
+			$(this).val('保存');
+			$(this).data('edit',true);
+		}
+		else{
+			$(this).parents('form').submit();
 		}
 	})
-	$('#category .list-group-item input').focusout(function(){
-		var text = $(this).val();
-		var $span = $(this).parents('.list-group-item').find('span');
-		$(this).parent().hide();
-		$span.text(text);
-		$span.show();
-	});
+
 
 	 $('#search').typeahead({
 	    	source: function (query, process) {
