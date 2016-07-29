@@ -333,40 +333,43 @@ router.get('/articles',function(req,res,next){
             var categories='';
 
             //作者名
-            var a = function () {
+            var dealAuthor = function () {
+                console.log(i)
+                console.log(doc[i])
                 Author.findById(doc[i]._authorid,function (err,adv) {
                     if(err) sendStatus(500);
                     doc[i].author_name = adv.adname
                     if(i+1==doc.length){
-                        b();return;
+                        dealCategory();return;
                     }
                     i++;
-                    a();
+                    dealAuthor();
                 });
             };
-            a();
+
 
             //分类名
-            var b = function () {
+            var dealCategory = function () {
                 Category.findById(doc[j]._categoryid[k],function (err,adv) {
                     categories += ((k==0?'':',')+adv.cname)
                     if(k+1==doc[j]._categoryid.length){
                         doc[j].categorys_name = categories;
                         categories='';
                         if(j+1==doc.length){
-                            c();return;
+                            dealRender();return;
                         }
                         j++;k=0;
                     }
                     else k++;
-                    b();
+                    dealCategory();
                 })
             }
 
-
-            var c = function () {
+            var dealRender = function () {
                 res.render('admin/articleslist',{title:'文章列表',articles:doc});
             }
+            if(!doc.length) dealRender();
+            else dealAuthor();
 
 
         }

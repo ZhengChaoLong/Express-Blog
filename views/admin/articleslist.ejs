@@ -3,6 +3,10 @@
 <% include public/head %>
 <body id=article>
 <% include public/nav %>
+
+<%if(!articles.length){%>
+<h3>No Articles!</h3>
+<%}else{%>
 <table class="table table-striped table-hover text-left" style="margin-top:40px">
     <thead>
     <tr>
@@ -30,4 +34,5 @@
 
     </tbody>
 </table>
+<%}%>
 <% include public/foot %>
