@@ -12,7 +12,7 @@ router.post('/profic/update',function(req,res,next){
 router.post('/changepsw',function(req,res,next){
     if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
-        res.redirect("/login");                //未登录则重定向到 /login 路径
+        res.redirect("user/login");                //未登录则重定向到 /login 路径
     }
         var id = req.session.user['_id'];
         var  oldpsw = req.body.oldpsw;
@@ -26,16 +26,16 @@ router.post('/changepsw',function(req,res,next){
                                 console.log(err);
                             }else{
                                 console.log('密码修改成功');
-                                res.redirect('/profic');
+                                res.redirect('/user/profic');
                             }
                     });
             }else{
                 console.log('两次输入的密码不一致');
-                res.redirect('/changepsw');
+                res.redirect('/user/changepsw');
             }
         }else{
             console.log('原密码错误');
-            res.redirect('/changepsw');
+            res.redirect('/user/changepsw');
         }
 });
 
@@ -44,26 +44,26 @@ router.post('/changepsw',function(req,res,next){
 router.get('/profic',function(req,res){
     if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
-        res.redirect("/login");                //未登录则重定向到 /login 路径
+        res.redirect("/user/login");                //未登录则重定向到 /login 路径
     }
     var welcome = 'welcome to  profile';
-    res.render('profic' , {profic:welcome} );
+    res.render('user/profic' , {profic:welcome} );
 });
 //显示个人密码修改页面
 router.get('/changepsw',function(req,res){
      if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
-        res.redirect("/login");                //未登录则重定向到 /login 路径
+        res.redirect("/user/login");                //未登录则重定向到 /login 路径
     }
     var welcome = 'welcome to here to change your password';
-    res.render('changepsw' , {profic:welcome} );
+    res.render('user/changepsw' , {profic:welcome} );
 });
 
 //异步处理评论
 router.post('/sendcomment',function(req,res,next){
     if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
-        res.redirect("/login");                //未登录则重定向到 /login 路径
+        res.redirect("/user/login");                //未登录则重定向到 /login 路径
     }
     var  userid = req.body.userid;
     var articleid = req.body.articleid;
@@ -144,7 +144,7 @@ router.get('/logout',function(req,res){
 
 //前台用户登陆
 router.get('/login',function(req,res){
-    res.render("login",{title:'User Login'});
+    res.render("user/login",{title:'User Login'});
 });
 
 //前台用户登陆处理，验证
@@ -177,7 +177,7 @@ router.post("/login",function(req,res){
 
 //前台用户注册页面
     router.get('/register',function(req,res){    // 到达此路径则渲染register文件，并传出title值供 register.html使用
-        res.render("register",{title:'User register'});
+        res.render("user/register",{title:'User register'});
     });
 
 //前台用户注册处理程序
@@ -215,10 +215,10 @@ router.post('/register',function(req,res){
 router.get("/home",function(req,res){ 
     if(!req.session.user){                     //到达/home路径首先判断是否已经登录
         req.session.error = "请先登录"
-        res.redirect("/login");                //未登录则重定向到 /login 路径
+        res.redirect("/user/login");                //未登录则重定向到 /login 路径
     }
     var name = req.session.user['name'];
-    res.render("home",{title:'Home' , name: name});         //已登录则渲染home页面
+    res.render("user/home",{title:'Home' , name: name});         //已登录则渲染home页面
 });
 
 module.exports = router;
