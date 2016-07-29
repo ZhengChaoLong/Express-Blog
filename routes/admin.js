@@ -317,12 +317,58 @@ router.get('/recycle/flush',function(req,res,next){
 //文章列表页
 router.get('/articles',function(req,res,next){
     var Article = global.dbHandel.getModel('article');
+    var Author = global.dbHandel.getModel('admin');
+    var Category = global.dbHandel.getModel('category');
     Article.find({isdelete:0},function(err,doc){
         if(err){
             res.send(500);
             console.log(err);
         }else{
-            res.render('admin/articleslist',{title:'文章发布',articles:doc});
+            for(var i=0;i<doc.length;i++){
+                doc[i].formated_date = doc[i].date.toLocaleString();
+            }
+            i=0;
+            var j=0
+            var k=0;
+            var categories='';
+
+            //作者名
+            var a = function () {
+                Author.findById(doc[i]._authorid,function (err,adv) {
+                    if(err) sendStatus(500);
+                    doc[i].author_name = adv.adname
+                    if(i+1==doc.length){
+                        b();return;
+                    }
+                    i++;
+                    a();
+                });
+            };
+            a();
+
+            //分类名
+            var b = function () {
+                Category.findById(doc[j]._categoryid[k],function (err,adv) {
+                    categories += ((k==0?'':',')+adv.cname)
+                    if(k+1==doc[j]._categoryid.length){
+                        doc[j].categorys_name = categories;
+                        categories='';
+                        if(j+1==doc.length){
+                            c();return;
+                        }
+                        j++;k=0;
+                    }
+                    else k++;
+                    b();
+                })
+            }
+
+
+            var c = function () {
+                res.render('admin/articleslist',{title:'文章列表',articles:doc});
+            }
+
+
         }
     })
 });

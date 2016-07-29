@@ -8,7 +8,7 @@ module.exports = {
          title:{type:String,required:true},
          _authorid:{type:String,required:true},
          content:{type:String,required:true},
-         data:{type:Date,default: Date.now},
+         date:{type:Date,default: Date.now},
          _categoryid:[String],
          isdelete:{type:Number,default:0}
     },
